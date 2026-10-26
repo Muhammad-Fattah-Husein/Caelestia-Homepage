@@ -1,0 +1,11 @@
+{
+  "type": "disc",
+  "name": "Music disc",
+  "version": "1.0.0",
+  "description": "",
+  "icon": "34_disc.png",
+  "entry": "index.js",
+  "styles": [
+    "style.css"
+  ]
+}

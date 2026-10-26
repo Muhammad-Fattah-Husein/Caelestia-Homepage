@@ -1,0 +1,16 @@
+{
+  "type": "rss",
+  "name": "RSS reader",
+  "version": "1.0.0",
+  "description": "Latest headlines from one feed",
+  "icon": "38_newspaper.png",
+  "entry": "index.js",
+  "styles": [
+    "style.css"
+  ],
+  "resize": "box",
+  "min": [
+    200,
+    140
+  ]
+}

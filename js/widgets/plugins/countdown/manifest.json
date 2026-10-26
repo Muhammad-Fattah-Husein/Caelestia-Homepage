@@ -1,0 +1,11 @@
+{
+  "type": "countdown",
+  "name": "Countdown",
+  "version": "1.0.0",
+  "description": "Count down to a date",
+  "icon": "05_hourglass.png",
+  "entry": "index.js",
+  "styles": [
+    "style.css"
+  ]
+}

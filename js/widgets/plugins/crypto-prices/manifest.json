@@ -1,0 +1,12 @@
+{
+  "type": "crypto",
+  "name": "Crypto prices",
+  "version": "1.0.0",
+  "description": "Price and 24-hour change",
+  "icon": "19_globe.png",
+  "entry": "index.js",
+  "styles": [
+    "style.css"
+  ],
+  "resize": "scale"
+}

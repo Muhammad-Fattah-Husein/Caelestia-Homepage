@@ -1,0 +1,49 @@
+/* ===== jalur sentuh dan keyboard ===== */
+
+/* garis tepi menerima gestur sendiri; tanpa ini browser mengambil alih geseran (tarik-untuk-muat-ulang, dll.) */
+#edge, #edge-r { touch-action: none; }
+.tabs { touch-action: pan-x; }          /* geser mendatar tetap menggulir tab, geser atas ditangkap */
+#filter-panel { touch-action: pan-y; }  /* geser kanan ditangkap; slider punya touch-action sendiri */
+
+/* pegangan kecil sebagai petunjuk di layar sentuh */
+@media (hover: none) {
+  #edge::after, #edge-r::after {
+    content: ""; position: absolute; border-radius: 2px;
+    background: color-mix(in srgb, var(--on-surface) 38%, transparent);
+  }
+  #edge::after { left: 50%; top: 6px; width: 56px; height: 4px; margin-left: -28px; }
+  #edge-r::after { right: 6px; top: 50%; width: 4px; height: 56px; margin-top: -28px; }
+}
+
+/* fokus keyboard yang jelas */
+:where(button, [role="tab"], [role="slider"], a, summary):focus-visible {
+  outline: 2px solid var(--primary); outline-offset: 2px;
+}
+.vs:focus-visible { outline-offset: 4px; border-radius: 999px; }
+
+/* tombol "Netral" di panel filter */
+.fp-reset {
+  font: inherit; font-size: .7rem; padding: 3px 9px; border: 0; border-radius: 999px; cursor: pointer; color: inherit;
+  background: color-mix(in srgb, var(--primary) 12%, transparent); min-height: 28px;
+}
+.fp-reset:hover { background: color-mix(in srgb, var(--primary) 25%, transparent); }
+
+/* area sentuh minimal di layar sentuh */
+@media (pointer: coarse) {
+  .fp-reset, .fp-auto { min-height: 36px; padding: 6px 12px; }
+  .tab { min-height: 40px; }
+}
+
+/* jendela bantuan pintasan */
+.keys-box { max-width: 420px; }
+.keys-list { display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; margin: 10px 0 14px; align-items: center; }
+.keys-list dt { margin: 0; }
+.keys-list dd { margin: 0; font-size: .85rem; opacity: .85; }
+kbd {
+  display: inline-block; padding: 2px 8px; border-radius: 6px; font: inherit; font-size: .78rem; white-space: pre;
+  background: color-mix(in srgb, var(--primary) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
+}
+.keys-opt { display: flex; align-items: center; gap: 8px; font-size: .82rem; cursor: pointer; }
+.keys-opt input { accent-color: var(--primary); }
+.bar-btn { display: grid; place-items: center; }

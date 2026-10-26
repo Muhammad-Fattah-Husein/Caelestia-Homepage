@@ -1,0 +1,12 @@
+{
+  "type": "fireflies",
+  "name": "Fireflies",
+  "version": "1.0.0",
+  "description": "Small drifting lights",
+  "icon": "17_sparkles.png",
+  "entry": "index.js",
+  "styles": [
+    "style.css"
+  ],
+  "unique": true
+}

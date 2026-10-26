@@ -1,0 +1,79 @@
+/* Scoped styles untuk clock plugin */
+[data-plugin="clock"],
+.clock-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 55%, var(--surface));
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 8px 28px rgb(0 0 0 / 45%);
+  backdrop-filter: blur(14px);
+}
+
+.clock-time {
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--primary);
+}
+
+.clock-date {
+  font-size: 0.875rem;
+  opacity: 1;
+  margin-top: 0.25rem;
+  color: var(--on-surface);
+}
+
+.clock-settings-btn {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  border: none;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, background-color 0.2s, transform 0.2s;
+  font-size: 0.85rem;
+  color: var(--on-surface);
+}
+
+.clock-widget:hover .clock-settings-btn,
+.clock-widget:focus-within .clock-settings-btn {
+  opacity: 0.65;
+}
+
+.clock-settings-btn:hover {
+  opacity: 1;
+  background: color-mix(in srgb, var(--primary) 22%, var(--surface));
+  transform: scale(1.05);
+}
+
+.clock-settings-btn:focus-visible {
+  opacity: 1;
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+@media (hover: none) {
+  .clock-settings-btn {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  [data-plugin="clock"],
+  .clock-widget {
+    background: var(--surface);
+    backdrop-filter: none;
+  }
+}

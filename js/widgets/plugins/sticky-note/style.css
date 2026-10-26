@@ -1,0 +1,17 @@
+/* catatan tempel */
+.sn {--note: #fde68a; width: 200px; height: 190px; display: flex; flex-direction: column; overflow: hidden;
+  border-radius: 4px 4px 14px 4px; background: var(--note); color: #2b2b2b;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .4); transform: rotate(-1.2deg);}
+
+.sn-head {display: flex; justify-content: flex-end; padding: 6px 8px; cursor: grab; background: rgba(0, 0, 0, .07);}
+
+.sn-dots {display: flex; gap: 6px;}
+
+.sn-dots button {width: 14px; height: 14px; padding: 0; border-radius: 50%; border: 1.5px solid rgba(0, 0, 0, .35); cursor: pointer;}
+
+.sn-dots button.on {outline: 2px solid rgba(0, 0, 0, .55); outline-offset: 1px;}
+
+.sn-text {flex: 1; min-height: 0; resize: none; border: 0; outline: 0; background: transparent; color: inherit;
+  font: inherit; font-size: .9rem; line-height: 1.4; padding: 8px 10px 10px; user-select: text; cursor: text;}
+
+.sn-text::placeholder {color: rgba(0, 0, 0, .45);}

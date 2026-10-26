@@ -1,0 +1,12 @@
+{
+  "type": "rain",
+  "name": "Rain",
+  "version": "1.0.0",
+  "description": "Rain effect across the screen",
+  "icon": "23_rain.png",
+  "entry": "index.js",
+  "styles": [
+    "style.css"
+  ],
+  "unique": true
+}

@@ -1,0 +1,125 @@
+/* ===== Dashboard: tata letak mengikuti screenshot referensi ===== */
+
+/* panel melebar hanya saat tab Dashboard aktif */
+#panel:has(.view[data-view="dashboard"].active) { width: min(1000px, calc(100vw - 120px)); }
+@media (max-width: 740px) {
+  #panel:has(.view[data-view="dashboard"].active) { width: calc(100vw - 72px); }
+}
+
+/* kiri: kalender + acara | tengah: jam + cuaca per jam | kanan: suhu + cincin */
+.dash {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) minmax(0, 2.3fr) minmax(190px, 1fr);
+  grid-template-areas: "cal mid wx" "ag mid wx";
+  gap: 12px 24px;
+  align-items: start;
+  font-variant-numeric: tabular-nums;
+}
+.dash-cal { grid-area: cal; }
+.dash-ag  { grid-area: ag; }
+.dash-mid { grid-area: mid; align-self: stretch; display: flex; }   /* tingginya mengikuti kolom kiri, jadi tidak melebihi panel */
+.dash-wx  { grid-area: wx; align-self: center; text-align: right; }
+.dash-hidden { display: none; }   /* profil dan mini player disembunyikan; modulnya tetap jalan */
+
+/* ---------- kalender kecil (diisi calendar.js) ---------- */
+.cal-mhead { display: flex; align-items: center; gap: 2px; margin-bottom: 10px; }
+.cal-mhead button {
+  background: none; border: 0; color: inherit; font: inherit; line-height: 1.2;
+  padding: 2px 8px; border-radius: 8px; cursor: pointer;
+}
+.cal-mhead button:hover:not(:disabled) { background: color-mix(in srgb, var(--primary) 20%, transparent); }
+.cal-mhead button:disabled { opacity: .25; cursor: default; }
+.cal-mhead .nav { font-size: 1.1rem; }
+.cal-mhead .add { font-size: 1.1rem; margin-left: 2px; }
+.dash-cal #cal-title {
+  flex: 1; margin: 0; text-align: center;
+  font-size: .8rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+}
+.dash-cal #cal-grid { gap: 2px; font-size: .78rem; }
+.dash-cal .cal-head { font-size: .7rem; opacity: .6; }
+.dash-cal .cal-day { border-radius: 8px; }
+.dash-cal .cal-day.today { background: var(--primary); color: var(--bg); border-radius: 8px; font-weight: 700; }
+
+/* ---------- acara, di bawah kalender ---------- */
+.dash-ag { border-top: 1px solid color-mix(in srgb, var(--on-surface) 15%, transparent); padding-top: 10px; }
+.dag-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+#dag-title { min-width: 0; font-size: .8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dag-open {
+  flex-shrink: 0; background: none; color: inherit; font: inherit; font-size: .72rem; cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--on-surface) 45%, transparent);
+  border-radius: 8px; padding: 3px 10px;
+}
+.dag-open:hover { background: color-mix(in srgb, var(--primary) 18%, transparent); }
+.dag-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.dag-item { min-width: 0; padding: 2px 0 2px 10px; border-left: 2px solid var(--primary); }
+.dag-name { font-size: .85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dag-time { margin-top: 1px; font-size: .74rem; opacity: .75; }
+.dag-empty { font-size: .8rem; opacity: .7; }
+
+/* ---------- jam + cuaca per jam yang berputar ---------- */
+.wx-orbit { position: relative; flex: 1; min-width: 0; min-height: 280px; touch-action: pan-y; user-select: none; cursor: grab; }
+.wx-orbit:active { cursor: grabbing; }
+.wx-path { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.wx-path ellipse {
+  fill: none; stroke: color-mix(in srgb, var(--on-surface) 35%, transparent);
+  stroke-width: 1; stroke-dasharray: 4 5; vector-effect: non-scaling-stroke;
+}
+.wx-clock {
+  position: absolute; inset: 0; display: grid; place-content: center; text-align: center;
+  pointer-events: none;
+}
+.wx-time { font-size: clamp(3rem, 6vw, 4.5rem); font-weight: 700; line-height: 1; letter-spacing: .02em; }
+#dash-s { font-size: .35em; font-weight: 400; opacity: .6; margin-left: .2em; }
+
+.wx-pt {
+  position: absolute; transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  min-width: 44px; padding: 6px 8px; border-radius: 14px;
+  background: color-mix(in srgb, var(--on-surface) 7%, transparent);
+  font-size: .72rem; line-height: 1.15;
+  animation: wx-in .35s both; animation-delay: calc(var(--i, 0) * 35ms);
+}
+.wx-pt .t { font-size: .62rem; opacity: .7; }
+.wx-pt .ic { display: grid; place-items: center; }
+.wx-pt .asset-icon { width: 1.2rem; height: 1.2rem; object-fit: contain; filter: brightness(0) invert(1); pointer-events: none; }
+.wx-pt.now {
+  min-width: 56px; padding: 10px 12px; border-radius: 999px;
+  background: var(--primary); color: var(--bg); font-size: .82rem; font-weight: 600;
+}
+.wx-pt.now .t { opacity: .8; }
+.wx-pt.now .asset-icon { width: 1.5rem; height: 1.5rem; filter: brightness(0); }
+@keyframes wx-in { from { opacity: 0; scale: .7; } }
+.no-motion .wx-pt { animation: none; }
+
+/* ---------- suhu besar + empat cincin ---------- */
+.wx-day {
+  display: flex; justify-content: flex-end; align-items: center; gap: 12px;
+  font-size: .85rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+}
+.wx-day button {
+  background: none; border: 0; color: inherit; font: inherit; font-size: 1.2rem; line-height: 1;
+  padding: 2px 8px; border-radius: 8px; cursor: pointer; opacity: .85;
+}
+.wx-day button:hover:not(:disabled) { background: color-mix(in srgb, var(--primary) 20%, transparent); }
+.wx-day button:disabled { opacity: .25; cursor: default; }
+.wx-temp { margin-top: 14px; font-size: clamp(3rem, 5.5vw, 4.2rem); font-weight: 700; line-height: 1; }
+.wx-desc { margin-top: 4px; font-size: .85rem; opacity: .8; }
+
+.wx-rings { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 34px; }
+.wx-ring { text-align: center; }
+.wx-ring .r { position: relative; width: 100%; aspect-ratio: 1; }
+.wx-ring svg { display: block; width: 100%; transform: rotate(-90deg); }
+.wx-ring circle { fill: none; stroke-width: 7; }
+.wx-ring .track { stroke: color-mix(in srgb, var(--primary) 20%, transparent); }
+.wx-ring .bar { stroke: var(--primary); stroke-linecap: round; transition: stroke-dashoffset .6s ease; }
+.wx-ring .v { position: absolute; inset: 0; display: grid; place-items: center; font-size: .62rem; font-weight: 600; }
+.wx-ring .l { margin-top: 4px; font-size: .58rem; letter-spacing: .08em; text-transform: uppercase; opacity: .7; }
+
+/* ---------- layar sempit: satu kolom ---------- */
+@media (max-width: 760px) {
+  .dash { grid-template-columns: 1fr; grid-template-areas: "mid" "wx" "cal" "ag"; }
+  .dash-wx { text-align: left; }
+  .wx-day { justify-content: flex-start; }
+  .dash-mid { display: block; }
+  .wx-orbit { height: 260px; flex: none; }
+}

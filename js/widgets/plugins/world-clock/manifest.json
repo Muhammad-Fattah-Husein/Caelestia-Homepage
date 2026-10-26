@@ -1,0 +1,11 @@
+{
+  "type": "worldclock",
+  "name": "World clock",
+  "version": "1.0.0",
+  "description": "Up to 3 time zones",
+  "icon": "19_globe.png",
+  "entry": "index.js",
+  "styles": [
+    "style.css"
+  ]
+}

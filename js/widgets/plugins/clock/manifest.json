@@ -1,0 +1,16 @@
+{
+  "name": "Clock Widget",
+  "version": "1.0.0",
+  "author": "Your Name",
+  "description": "Digital clock widget with multiple time zones",
+  "entry": "index.js",
+  "styles": "style.css",
+  "permissions": ["storage"],
+  "dependencies": {},
+  "config": {
+    "format": "24h",
+    "showSeconds": true,
+    "timezone": "local"
+  },
+  "icon": "43_clock.png"
+}

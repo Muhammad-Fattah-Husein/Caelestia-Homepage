@@ -1,0 +1,12 @@
+{
+  "type": "pomodoro",
+  "name": "Focus timer",
+  "version": "1.0.0",
+  "description": "25 minutes focused, 5 minutes break",
+  "icon": "28_tomato.png",
+  "entry": "index.js",
+  "styles": [
+    "style.css"
+  ],
+  "unique": true
+}

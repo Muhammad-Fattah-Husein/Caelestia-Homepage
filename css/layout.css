@@ -1,0 +1,619 @@
+:root {
+  --bar-size: 48px;
+  --inset-top: 0px;
+  --inset-right: 0px;
+  --inset-bottom: 0px;
+  --inset-left: 0px;
+}
+
+/* sisi yang ditempati bar mendapat "inset" seukuran bar */
+html[data-bar="left"]   { --inset-left:   var(--bar-size); }
+html[data-bar="right"]  { --inset-right:  var(--bar-size); }
+html[data-bar="top"]    { --inset-top:    var(--bar-size); }
+html[data-bar="bottom"] { --inset-bottom: var(--bar-size); }
+
+/* bar */
+#bar {
+  position: fixed;
+  inset: auto;          /* reset dulu supaya tidak bentrok */
+  display: flex;
+  align-items: center;
+  z-index: 50;
+}
+
+/* bar vertikal (kiri/kanan) */
+html[data-bar="left"] #bar,
+html[data-bar="right"] #bar {
+  top: 0; bottom: 0;
+  width: 48px;
+  height: auto;
+  padding: 16px 0;
+  flex-direction: column;
+}
+html[data-bar="left"] #bar  { left: 0; right: auto; }
+html[data-bar="right"] #bar { right: 0; left: auto; }
+
+/* bar horizontal (atas/bawah) */
+html[data-bar="top"] #bar,
+html[data-bar="bottom"] #bar {
+  left: 0; right: 0;
+  top: 0;
+  bottom: auto;
+  width: auto;
+  height: 48px;
+  padding: 0 16px;
+  flex-direction: row;
+}
+html[data-bar="bottom"] #bar { top: auto; bottom: 0; }
+
+html[data-bar="top"] #bar .bar-top,
+html[data-bar="top"] #bar .bar-mid,
+html[data-bar="top"] #bar .bar-bottom,
+html[data-bar="bottom"] #bar .bar-top,
+html[data-bar="bottom"] #bar .bar-mid,
+html[data-bar="bottom"] #bar .bar-bottom {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+html[data-bar="top"] #bar .bar-mid,
+html[data-bar="bottom"] #bar .bar-mid { min-height: 0; }
+html[data-bar="top"] #bar-title,
+html[data-bar="bottom"] #bar-title { writing-mode: horizontal-tb; }
+html[data-bar="top"] #bar-clock,
+html[data-bar="bottom"] #bar-clock { flex-direction: row; gap: 2px; }
+
+/* tombol power selalu di ujung bar */
+#bar .power-btn { margin-top: auto; }
+html[data-bar="top"] #bar .power-btn,
+html[data-bar="bottom"] #bar .power-btn {
+  margin-top: 0;
+  margin-left: auto;
+}
+
+/* nama tema: vertikal di bar samping, mendatar di bar atas/bawah */
+html[data-bar="top"] #bar .theme-name,
+html[data-bar="bottom"] #bar .theme-name {
+  writing-mode: horizontal-tb;
+  transform: none;
+}
+
+/* panel atas (jam/cuaca/kalender): tetap maks. setengah halaman */
+.top-panel {
+  top: var(--inset-top);
+  left: var(--inset-left);
+  right: var(--inset-right);
+  max-height: calc(50vh - var(--inset-top));
+}
+
+/* panel hover kanan (slider suhu & kecerahan) */
+.right-panel { right: var(--inset-right); }
+
+/* panel pilihan tema, muncul di sebelah bar */
+html[data-bar="left"]   .theme-panel { left: var(--bar-size);  top: 0; bottom: 0; }
+html[data-bar="right"]  .theme-panel { right: var(--bar-size); top: 0; bottom: 0; }
+html[data-bar="top"]    .theme-panel { top: var(--bar-size);    left: 0; right: 0; }
+html[data-bar="bottom"] .theme-panel { bottom: var(--bar-size); left: 0; right: 0; }
+
+:root {
+  --fillet: 20px; /* jari-jari lengkung, ubah kalau mau lebih landai atau lebih tajam */
+  --cut:
+    transparent calc(var(--fillet) - 0.5px), var(--surface) var(--fillet); /* bentuk potongan lingkaran */
+  --frame: 10px; /* tebal bingkai */
+  --window-r: 22px; /* kelengkungan sudut jendela wallpaper */
+}
+
+#frame {
+  position: fixed;
+  inset: calc(var(--frame) + var(--inset-top))
+    calc(var(--frame) + var(--inset-right))
+    calc(var(--frame) + var(--inset-bottom))
+    calc(var(--frame) + var(--inset-left));
+  border-radius: var(--window-r);
+  box-shadow: 0 0 0 100vmax var(--surface);             /* mewarnai semua yang di luar jendela */
+  pointer-events: none;
+  z-index: 8;   /* di atas wallpaper, efek, dan widget; di bawah panel, launcher, terminal, dan toast */
+}
+
+#wallpaper {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: center / cover no-repeat;
+}
+
+#wallpaper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+html.focusing #wallpaper::after {
+  opacity: 0.4;
+}
+
+#edge {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(900px, 55vw);
+  height: 48px;
+  z-index: 10;
+}
+
+#panel {
+  max-height: 50vh;
+  max-height: 50dvh; /* browser HP: tinggi layar tanpa bar URL */
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  width: min(640px, 90vw);
+  padding: 16px 20px 20px;
+  border-radius: 0 0 var(--radius) var(--radius); /* hanya sudut bawah */
+  background: var(--surface);
+  /* hapus: backdrop-filter: blur(16px); */
+  transform: translate(-50%, -100%); /* sembunyi di atas layar */
+  opacity: 0;
+  pointer-events: none;
+}
+
+#panel.open {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#bar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 0;
+  background: var(--surface);
+  z-index: 22;
+}
+
+.bar-top,
+.bar-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.bar-mid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+}
+
+#bar-title {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  writing-mode: vertical-rl; /* teks dibaca dari atas ke bawah */
+  max-height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+#bar-title:hover {
+  opacity: 1;
+}
+
+#bar-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 600;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary);
+}
+
+#theme-picker {
+  position: fixed;
+  left: 48px; /* lebar bar 48px + jarak 8px */
+  top: 50%;
+  width: min(300px, calc(100vw - 64px));
+  max-height: 50vh;
+  max-height: 50dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  z-index: 20;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--surface);
+  transform: translate(-24px, -50%); /* posisi tertutup */
+  /* hapus: backdrop-filter: blur(16px); */
+  opacity: 0;
+  pointer-events: none;
+}
+
+#theme-picker.open {
+  transform: translate(0, -50%);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#launcher {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  width: min(560px, calc(100vw - 96px)); /* 96px = ruang untuk bar kiri */
+  z-index: 30;
+  transform: translate(-50%, 16px);
+  opacity: 0;
+  pointer-events: none;
+}
+#launcher.open {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#toasts {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: min(340px, calc(100vw - 96px));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 40;
+  pointer-events: none; /* wadahnya tidak menghalangi klik di bawahnya */
+}
+
+#terminal {
+  position: fixed;
+  top: 50%;
+  left: calc(50% + 24px); /* geser setengah lebar bar kiri */
+  width: min(860px, calc(100vw - 96px));
+  height: 50vh;
+  height: 50dvh; /* ubah di dua baris ini kalau mau lebih tinggi */
+  z-index: 25; /* di atas panel, di bawah launcher dan toast */
+  transform: translate(-50%, calc(-50% + 12px)) scale(0.98);
+  opacity: 0;
+  pointer-events: none;
+}
+#terminal.open {
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (max-width: 740px) {
+  #panel {
+    left: calc(50% + 24px);
+    width: calc(100vw - 72px);
+  }
+}
+
+#edge-r {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 40px;
+  height: min(420px, 60vh);
+  z-index: 10;
+}
+
+#filter-panel {
+  --sl-h: clamp(
+    110px,
+    26vh,
+    190px
+  ); /* tinggi slider menyesuaikan layar, panel tetap di bawah setengah layar */
+  position: fixed;
+  top: 50%;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  gap: 18px;
+  padding: 14px 16px;
+  user-select: none;
+  border-radius: var(--radius) 0 0 var(--radius);
+  background: var(--surface);
+  /* hapus: backdrop-filter: blur(16px); */
+  transform: translate(100%, -50%);
+  opacity: 0;
+  pointer-events: none;
+}
+#filter-panel.open {
+  transform: translate(0, -50%);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#tint,
+#dim {
+  position: fixed;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+#tint {
+  z-index: 90;
+  mix-blend-mode: multiply;
+}
+#dim {
+  z-index: 91;
+  background: #000;
+}
+
+#power-menu {
+  position: fixed;
+  left: 48px; /* di samping bar */
+  right: auto;
+  top: auto;
+  bottom: 0px;
+  transform-origin: left bottom;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px calc(10px + var(--frame)); /* isi tetap di atas bingkai bawah */
+  border-radius: 0 28px 0px 0;
+  background: var(--surface);
+  transform: translateX(-24px); /* posisi tertutup */
+  /* hapus: backdrop-filter: blur(16px); */
+  opacity: 0;
+  pointer-events: none;
+}
+#power-menu.open {
+  transform: none;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+html[data-bar="right"] #power-menu {
+  left: auto;
+  right: var(--bar-size);
+  transform-origin: right bottom;
+  border-radius: 28px 0 0 0;
+  transform: translateX(24px);
+}
+
+html[data-bar="right"] #power-menu.open {
+  transform: none;
+}
+
+html[data-bar="right"] #power-menu::before,
+html[data-bar="right"] #power-menu::after,
+html[data-bar="top"] #power-menu::before,
+html[data-bar="top"] #power-menu::after,
+html[data-bar="bottom"] #power-menu::before,
+html[data-bar="bottom"] #power-menu::after {
+  display: none;
+}
+
+html[data-bar="top"] #power-menu,
+html[data-bar="bottom"] #power-menu {
+  left: auto;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 0;
+}
+
+html[data-bar="top"] #power-menu {
+  top: var(--bar-size);
+  bottom: auto;
+  transform-origin: right top;
+  border-radius: 0 0 0 28px;
+  transform: translateY(-24px);
+}
+
+html[data-bar="top"] #power-menu.open {
+  transform: none;
+}
+
+html[data-bar="bottom"] #power-menu {
+  top: auto;
+  bottom: var(--bar-size);
+  transform-origin: right bottom;
+  border-radius: 28px 0 0 0;
+  transform: translateY(24px);
+}
+
+html[data-bar="bottom"] #power-menu.open {
+  transform: none;
+}
+
+#power-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  place-items: center;
+  background: #000;
+}
+html.off #power-screen {
+  display: grid;
+}
+html.off body > :not(#power-screen) {
+  display: none !important;
+} /* semua yang lain tidak digambar */
+
+#wave {
+  position: fixed;
+  left: 48px; /* mulai di kanan bar kiri, tidak menutupinya */
+  bottom: 0;
+  width: calc(100vw - 48px);
+  height: 30vh;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+#wave.on {
+  opacity: 1;
+}
+
+#panel::before, #panel::after,
+#filter-panel::before, #filter-panel::after,
+#theme-picker::before, #theme-picker::after,
+#power-menu::before, #power-menu::after {
+  content: "";
+  position: absolute;
+}
+
+/* panel atas: menyatu ke tepi dalam bingkai atas */
+#panel::before {
+  top: calc(var(--frame) - 1px); left: calc(-1 * var(--fillet));
+  width: calc(var(--fillet) + 1px); height: calc(var(--fillet) + 1px);
+  background: radial-gradient(circle at 0 100%, var(--cut));
+}
+#panel::after {
+  top: calc(var(--frame) - 1px); right: calc(-1 * var(--fillet));
+  width: calc(var(--fillet) + 1px); height: calc(var(--fillet) + 1px);
+  background: radial-gradient(circle at 100% 100%, var(--cut));
+}
+
+/* panel filter kanan: menyatu ke tepi dalam bingkai kanan */
+#filter-panel::before {
+  right: calc(var(--frame) - 1px); top: calc(-1 * var(--fillet));
+  width: calc(var(--fillet) + 1px); height: calc(var(--fillet) + 1px);
+  background: radial-gradient(circle at 0 0, var(--cut));
+}
+#filter-panel::after {
+  right: calc(var(--frame) - 1px); bottom: calc(-1 * var(--fillet));
+  width: calc(var(--fillet) + 1px); height: calc(var(--fillet) + 1px);
+  background: radial-gradient(circle at 0 100%, var(--cut));
+}
+
+/* panel tema dan menu power: lengkung atas menyatu ke bar */
+#theme-picker::before, #power-menu::before  {
+  left: -1px; top: calc(-1 * var(--fillet));
+  width: calc(var(--fillet) + 1px); height: calc(var(--fillet) + 1px);
+  background: radial-gradient(circle at 100% 0, var(--cut));
+}
+/* panel tema: lengkung bawah juga menyatu ke bar */
+#theme-picker::after {
+  left: -1px; bottom: calc(-1 * var(--fillet));
+  width: calc(var(--fillet) + 1px); height: calc(var(--fillet) + 1px);
+  background: radial-gradient(circle at 100% 100%, var(--cut));
+}
+/* menu power: sudut kanan bawahnya menyatu ke tepi dalam bingkai bawah */
+#power-menu::after {
+  right: calc(-1 * var(--fillet)); bottom: calc(var(--frame) - 1px);
+  width: calc(var(--fillet) + 1px); height: calc(var(--fillet) + 1px);
+  background: radial-gradient(circle at 100% 0, var(--cut));
+}
+
+/* fastfetch: keterangan 55% di kiri, logo ASCII 45% di kanan */
+.ff { display: grid; grid-template-columns: 45fr 55fr; gap: 12px; align-items: center; margin: 4px 0; }
+.ff-info { min-width: 0; }
+.ff-info .tl { white-space: pre-wrap; overflow-wrap: anywhere; }   /* nilai panjang turun baris, tidak menembus kolom */
+.ff-logo {
+  margin: 0; min-width: 0; justify-self: center; overflow: hidden;
+  font: inherit; letter-spacing: 0; white-space: pre; color: var(--primary);
+  line-height: 1.2;                                   /* tinggi baris = 2x lebar huruf, supaya lingkaran tetap bulat */
+  font-size: min(.9rem, calc((45cqw - 14px) / 19.2)); /* mengecil otomatis agar 32 huruf selalu muat di kolom 45% */
+}
+@media (max-width: 600px) {
+  .ff { gap: 8px; }
+  .ff-logo { font-size: .7rem; }
+}
+
+/* ===== Perbaikan bar atas/bawah (hanya laptop & tablet; HP diatur phone.css) ===== */
+@media (min-width: 601px) {
+  html[data-bar="top"] #bar,
+  html[data-bar="bottom"] #bar {
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* dua grup di ujung: rapat, sejajar tengah, jarak seragam */
+  html[data-bar="top"] #bar .bar-top,
+  html[data-bar="top"] #bar .bar-bottom,
+  html[data-bar="bottom"] #bar .bar-top,
+  html[data-bar="bottom"] #bar .bar-bottom {
+    flex: 0 0 auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+  html[data-bar="top"] #bar :is(.bar-top, .bar-bottom) > *,
+  html[data-bar="bottom"] #bar :is(.bar-top, .bar-bottom) > * {
+    margin: 0;               /* buang sisa margin versi vertikal */
+  }
+
+  /* grup tengah (nama tema): tepat di tengah layar, tidak tergantung lebar grup lain */
+  html[data-bar="top"] #bar .bar-mid,
+  html[data-bar="bottom"] #bar .bar-mid {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    flex: none;
+    max-width: 30vw;
+  }
+  html[data-bar="top"] #bar-title,
+  html[data-bar="bottom"] #bar-title {
+    max-width: 100%;
+  }
+
+  /* pill: ikut mendatar */
+  html[data-bar="top"] #bar .pill,
+  html[data-bar="bottom"] #bar .pill {
+    flex-direction: row;
+    width: auto;
+    height: 34px;
+    padding: 0 10px;
+    gap: 10px;
+  }
+
+  /* jam: 13:41 sebaris, dengan titik dua */
+  html[data-bar="top"] #bar-clock,
+  html[data-bar="bottom"] #bar-clock {
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+  }
+  html[data-bar="top"] #clock-hh::after,
+  html[data-bar="bottom"] #clock-hh::after {
+    content: ":";
+    margin: 0 2px;
+    opacity: .7;
+  }
+}
+
+.power-btn {            /* ganti dengan class tombol power kamu */
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;           /* padding bawaan <button> sering bikin geser */
+  line-height: 1;
+}
+
+.power-btn svg,
+.power-btn i,
+.power-btn span {       /* sesuaikan dengan elemen ikonmu */
+  display: block;       /* hilangkan celah baseline inline */
+  line-height: 1;
+  margin: 0;
+}
+
+.power-btn svg { transform: translateY(-1px); }  /* atau pakai nilai yang pas */

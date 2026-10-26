@@ -1,0 +1,12 @@
+{
+  "type": "quote",
+  "name": "Daily quote",
+  "version": "1.0.0",
+  "description": "Changes each day",
+  "icon": "33_chat.png",
+  "entry": "index.js",
+  "styles": [
+    "style.css"
+  ],
+  "unique": true
+}

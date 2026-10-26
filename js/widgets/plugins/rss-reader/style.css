@@ -1,0 +1,24 @@
+.rss {padding: 14px 18px; border-radius: var(--radius); color: var(--on-surface);
+  background: color-mix(in srgb, var(--surface) 60%, transparent); backdrop-filter: blur(12px);}
+
+/* pembaca RSS */
+.rss {width: 280px; height: 220px; display: flex; flex-direction: column; gap: 8px; overflow: hidden;}
+
+.rss-head {display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: .85rem;}
+
+.rss-title {overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+
+.rss-edit {border: 0; background: none; color: inherit; opacity: .6; cursor: pointer;}
+
+.rss-edit:hover {opacity: 1;}
+
+.rss-list {flex: 1; min-height: 0; margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; overflow: hidden;}
+
+.rss-list a {display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
+  font-size: .82rem; line-height: 1.3; color: inherit; text-decoration: none;}
+
+.rss-list a:hover {color: var(--primary);}
+
+.rss-ago {font-size: .68rem; opacity: .55;}
+
+.rss-note {font-size: .75rem; opacity: .65;}

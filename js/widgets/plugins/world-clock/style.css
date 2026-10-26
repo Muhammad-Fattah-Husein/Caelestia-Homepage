@@ -1,0 +1,16 @@
+.wcl-row {display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 3px 0;}
+
+.wcl-city {font-size: .8rem; opacity: .8;}
+
+.wcl-time {font-size: 1.3rem; font-weight: 600; font-variant-numeric: tabular-nums;}
+
+.wcl-tag {margin-left: 6px; font-size: .65rem; font-weight: 400; opacity: .6;}
+
+.wcl {padding: 14px 18px; border-radius: var(--radius); color: var(--on-surface);
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
+  backdrop-filter: blur(12px);}
+
+/* jam dunia */
+.wcl {min-width: 190px; cursor: pointer;}
+
+html.lite .wcl {background: var(--surface);}

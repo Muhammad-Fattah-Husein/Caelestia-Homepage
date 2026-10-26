@@ -1,0 +1,12 @@
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+coverage/
+.codebase-memory/

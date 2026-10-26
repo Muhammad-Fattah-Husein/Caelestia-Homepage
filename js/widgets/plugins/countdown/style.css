@@ -1,0 +1,16 @@
+.cd-num {font-size: 2.4rem; font-weight: 700; line-height: 1.1; color: var(--primary); font-variant-numeric: tabular-nums;}
+
+.cd-unit {font-size: .8rem; opacity: .8;}
+
+.cd-label {margin-top: 6px; font-weight: 600; font-size: .9rem;}
+
+.cd-date {font-size: .72rem; opacity: .65;}
+
+.cd {padding: 14px 18px; border-radius: var(--radius); color: var(--on-surface);
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
+  backdrop-filter: blur(12px);}
+
+/* hitung mundur */
+.cd {min-width: 150px; text-align: center; cursor: pointer;}
+
+html.lite .cd {background: var(--surface);}

@@ -1,0 +1,11 @@
+{
+  "type": "checklist",
+  "name": "Checklist",
+  "version": "1.0.0",
+  "description": "Up to 5 tasks, with confetti on completion",
+  "icon": "16_check.png",
+  "entry": "index.js",
+  "styles": [
+    "style.css"
+  ]
+}

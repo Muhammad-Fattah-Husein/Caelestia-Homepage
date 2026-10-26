@@ -1,0 +1,16 @@
+{
+  "type": "photo",
+  "name": "Photo frame",
+  "version": "1.0.0",
+  "description": "Photo from your device or a URL",
+  "icon": "44_image.png",
+  "entry": "index.js",
+  "styles": [
+    "style.css"
+  ],
+  "resize": "box",
+  "min": [
+    120,
+    100
+  ]
+}

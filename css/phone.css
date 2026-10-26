@@ -1,0 +1,250 @@
+/* ===== muat PALING AKHIR (setelah components.css dan touch-keys.css) =====
+   Tablet (layar sentuh): layout tetap, hanya ada tombol FAB di kanan bawah.
+   HP (<= 600px): bar pindah ke bawah, jam jadi tab yang menonjol, FAB di kiri bawah. */
+
+:root {
+  --bar-h: 48px;
+  /* area wallpaper yang bisa dipakai widget; dibaca juga oleh #wd-grid */
+  --in-l: 58px; --in-t: 10px; --in-r: 10px; --in-b: 10px;
+}
+
+/* ---------- FAB + menu (sembunyi di desktop dengan mouse) ---------- */
+#fab, #fab-menu { display: none; }
+
+@media (hover: none) and (pointer: coarse), (max-width: 600px) {
+  #fab {
+    display: grid; place-items: center; position: fixed; z-index: 23;
+    right: calc(var(--frame) + 14px); bottom: calc(var(--frame) + 14px);
+    width: 52px; height: 52px; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+    font-size: 1.6rem; line-height: 1; color: var(--bg); background: var(--primary);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .4);
+    transition: transform .3s cubic-bezier(.34, 1.3, .5, 1);
+  }
+  #fab.open { transform: rotate(45deg); }
+
+  #fab-menu {
+    display: flex; flex-direction: column; gap: 2px; position: fixed; z-index: 24;
+    right: calc(var(--frame) + 14px); bottom: calc(var(--frame) + 14px + 52px + 10px);
+    min-width: 200px; padding: 8px; border-radius: var(--radius);
+    background: var(--surface); color: var(--on-surface);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, .45);
+    opacity: 0; pointer-events: none; transform: translateY(12px) scale(.96); transform-origin: bottom right;
+    transition: opacity .2s ease, transform .3s cubic-bezier(.2, .8, .2, 1);
+  }
+  #fab-menu.open { opacity: 1; pointer-events: auto; transform: none; }
+
+  .fab-item {
+    display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 8px 12px;
+    border: 0; border-radius: 10px; cursor: pointer; text-align: left;
+    background: none; color: inherit; font: inherit; font-size: .92rem;
+  }
+  .fab-item:hover, .fab-item:focus-visible { background: color-mix(in srgb, var(--primary) 18%, transparent); outline: none; }
+  .fab-ico { display: inline-flex; width: 1.6em; justify-content: center; }
+  .fab-ico .asset-icon { width: 1.2em; height: 1.2em; object-fit: contain; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #fab, #fab-menu { transition: none; }
+}
+
+/* ---------- HP ---------- */
+@media (max-width: 600px) {
+  :root { --in-l: 10px; --in-t: 10px; --in-r: 10px; --in-b: 58px; }
+
+  /* bingkai: bar sekarang di bawah */
+  #frame { inset: var(--frame) var(--frame) var(--bar-h) var(--frame); }
+
+  /* bar bawah */
+  #bar {
+    inset: auto 0 0 0; width: auto; height: var(--bar-h);
+    flex-direction: row; padding: 0 16px; gap: 8px;
+  }
+  html[data-bar] #bar { inset: auto 0 0 0; width: auto; height: var(--bar-h); flex-direction: row; padding: 0 16px; }
+  html[data-bar] #bar .bar-top,
+  html[data-bar] #bar .bar-mid,
+  html[data-bar] #bar .bar-bottom { flex-direction: row; gap: 8px; }
+  /* semua tombol bar pindah ke menu FAB; hanya tombol power dan nama tema yang tetap */
+  #bar button:not(#btn-power):not(#bar-title) { display: none !important; }
+
+    /* hilangkan "pil" kosong di bar: wadah yang tombol di dalamnya sudah disembunyikan */
+  #bar .bar-top, #bar .bar-mid, #bar .bar-bottom, #bar-ws {
+    background: none; box-shadow: none; border: 0; outline: 0; padding: 0; min-width: 0;
+  }
+  #bar .bar-btn:not(#btn-power),
+  #bar :is(a, [role="button"]):not(#btn-power) { display: none !important; }
+
+  /* jam: tab yang menonjol di tengah bar */
+  #bar-clock {
+    position: absolute; left: 50%; bottom: 100%; transform: translateX(-50%);
+    display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 2px;
+    min-width: 150px; height: 36px; padding: 0 18px;
+    font-size: 1.2rem; background: var(--surface); border-radius: 16px 16px 0 0;
+  }
+  #clock-hh::after { content: ":"; margin-left: 2px; opacity: .7; }
+  /* lengkung di kiri dan kanan kaki tab */
+  #bar-clock::before, #bar-clock::after {
+    content: ""; position: absolute; bottom: 0; width: calc(var(--fillet) + 1px); height: calc(var(--fillet) + 1px);
+  }
+  #bar-clock::before { left: calc(-1 * var(--fillet) - 1px); background: radial-gradient(circle at 0 0, var(--cut)); }
+  #bar-clock::after { right: calc(-1 * var(--fillet) - 1px); background: radial-gradient(circle at 100% 0, var(--cut)); }
+
+  /* nama tema (tombol pemilih tema) di bawah jam */
+  #bar-title {
+    position: absolute; left: 50%; bottom: 4px; transform: translateX(-50%);
+    writing-mode: horizontal-tb; max-width: 45vw; min-height: 28px; padding: 4px 12px;
+    font-size: .72rem; letter-spacing: .08em;
+  }
+
+  /* FAB menumpang di tepi atas bar, kiri bawah */
+  #fab { left: 14px; right: auto; bottom: calc(var(--bar-h) - 22px); width: 56px; height: 56px; }
+  #fab-menu { left: 14px; right: auto; bottom: calc(var(--bar-h) + 44px); transform-origin: bottom left; }
+
+  /* panel atas: di tengah, tidak lagi menyisakan ruang bar kiri */
+  #panel { left: 50%; width: min(640px, calc(100vw - 2 * var(--frame) - 2 * var(--fillet))); }
+
+  /* pemilih tema: kartu melayang di atas bar */
+  #theme-picker {
+    left: 50%; top: auto; bottom: calc(var(--bar-h) + 44px);
+    width: min(320px, calc(100vw - 24px)); border-radius: var(--radius);
+    transform: translate(-50%, 16px);
+  }
+  #theme-picker.open { transform: translate(-50%, 0); }
+
+  /* menu power: naik dari sudut kanan bar */
+  #power-menu {
+    left: auto; right: 0; bottom: var(--bar-h);
+    padding: 10px; border-radius: 20px 0 0 0; transform: translateY(16px);
+  }
+  #power-menu.open { transform: none; }
+  #theme-picker::before, #theme-picker::after,
+  #power-menu::before, #power-menu::after { display: none; }
+
+  /* launcher: di atas FAB dan tab jam, tidak menimpa bar */
+  #launcher { width: calc(100vw - 24px); bottom: calc(var(--bar-h) + 52px); }
+  #terminal { left: 50%; width: calc(100vw - 20px); }
+  #toasts { width: calc(100vw - 32px); }
+  #wave { left: 0; width: 100vw; bottom: var(--bar-h); }
+
+  /* perpustakaan musik: hampir selebar layar, di atas bar */
+  .lib { width: calc(100vw - 20px); min-width: 0; height: calc(100dvh - var(--bar-h) - 20px); resize: none; }
+
+    /* ===== Dashboard HP: profil | cuaca | musik, lalu agenda, lalu kalender ===== */
+  .dash-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .dash-grid .col { display: contents; }   /* kartu jadi anak langsung grid, bisa ditaruh bebas */
+
+  .dash-grid [data-dash="profile"] { grid-area: 1 / 1; }
+  .dash-grid [data-dash="weather"] { grid-area: 1 / 2; }
+  .dash-grid [data-dash="mini"]    { grid-area: 1 / 3; }
+  .dash-grid .nx                   { grid-area: 2 / 1 / 3 / 4; }   /* agenda = kartu "Berikutnya" */
+  .dash-grid [data-dash="cal"]     { grid-area: 3 / 1 / 4 / 4; }
+
+  .dash-grid :is([data-dash="profile"], [data-dash="weather"], [data-dash="mini"]),
+  .dash-grid :is(.profile, .weather, .mini) {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; width: 100%; min-width: 0; text-align: center;
+  }
+  .dash-grid :is([data-dash="profile"], [data-dash="weather"], [data-dash="mini"]) { padding: 14px 8px; }
+
+  /* profil: foto dan nama saja */
+  .dash-grid .pf-avatar { width: 64px; height: 64px; font-size: 1.6rem; }
+  .dash-grid .pf-info { width: 100%; text-align: center; }
+  .dash-grid .pf-name { font-size: .85rem; }
+  .dash-grid .pf-line, .dash-grid .pf-row { display: none; }
+
+  /* cuaca: lambang besar, suhu di bawahnya */
+  .dash-grid #weather-icon .asset-icon { width: 3.2rem; height: 3.2rem; }
+  .dash-grid #weather-temp { font-size: 1.4rem; }
+  .dash-grid #weather-desc { display: none; }
+
+  /* musik: disc besar, judul lagu di bawahnya (maksimal 2 baris) */
+  .dash-grid .mini .disc { width: min(76px, 100%); height: auto; aspect-ratio: 1; }
+  .dash-grid .mini-info { width: 100%; text-align: center; }
+  .dash-grid .mini-title {
+    font-size: .8rem; white-space: normal; overflow: hidden;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2;
+  }
+  .dash-grid .mini-artist { display: none; }
+
+  /* ===== tab Media HP ===== */
+  .player { grid-template-columns: minmax(0, 1fr); justify-items: stretch; gap: 10px; }
+  .player > .viz { justify-self: center; }
+  .player .info { width: 100%; max-width: 100%; min-width: 0; }
+  #seek { display: block; width: 100%; max-width: 100%; margin: 0; box-sizing: border-box; }
+  .times { width: 100%; }
+  .extras { max-width: 100%; min-width: 0; gap: 8px; }
+  .x-vol { min-width: 0; max-width: none; }
+  .views { overflow-x: hidden; }   /* tidak pernah bergeser ke samping */
+
+  /* tiga tombol putar dikecilkan */
+  .controls { gap: 10px; margin-bottom: 8px; }
+  .controls button { width: 32px; height: 32px; font-size: .75rem; }
+  .controls button svg, .controls button .asset-icon { width: 14px; height: 14px; }
+  #btn-play { width: 40px; height: 40px; }
+
+    /* ===== tab Performance HP: tiga gauge tetap sebaris, mengecil mengikuti lebar ===== */
+  .gauges { flex-wrap: nowrap; gap: 8px; }
+  .gauge { flex: 1 1 0; width: auto; min-width: 0; max-width: 100px; }
+  .gauge circle { stroke-width: 9; }                 /* cincin makin kecil, garis dijaga tetap terbaca */
+  .gauge .val { font-size: .72rem; }
+  .gauge .label { margin-top: 4px; font-size: .7rem; white-space: nowrap; }
+
+    /* tab Media HP: acak, ulang, volume pindah ke samping tombol prev/play/next */
+  .player .info {
+    display: grid; grid-template-columns: max-content minmax(0, 1fr);
+    column-gap: 12px; align-items: center;
+  }
+  #track-title, #track-artist { grid-column: 1 / -1; min-width: 0; contain: inline-size; }
+  #track-title  { grid-row: 1; }
+  #track-artist { grid-row: 2; }
+  .controls     { grid-column: 1; grid-row: 3; margin-bottom: 0; }
+  .extras       { grid-column: 2; grid-row: 3; margin: 0; gap: 4px; min-width: 0; }
+  #seek         { grid-column: 1 / -1; grid-row: 4; margin-top: 8px; }
+  .times        { grid-column: 1 / -1; grid-row: 5; }
+
+  /* item ekstra dikecilkan */
+  .x-btn { width: 26px; height: 26px; }
+  .x-btn svg { width: 16px; height: 16px; }
+  .x-vol { flex: 1; min-width: 36px; max-width: none; }
+
+    /* ===== Pengaturan HP ===== */
+  /* scrollbar disembunyikan, geser tetap berfungsi */
+  .prefs-nav, .prefs-body { scrollbar-width: none; -ms-overflow-style: none; }
+  .prefs-nav::-webkit-scrollbar, .prefs-body::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+  /* Profil: foto, "Pilih foto", dan "Hapus foto" dalam satu baris, rata kiri-kanan */
+  .pr-avatar { width: 100%; flex-wrap: nowrap; justify-content: space-between; gap: 8px; }
+  .pr-avatar .pf-prev { flex: none; width: 52px; height: 52px; font-size: 1.2rem; }
+  .pr-avatar .pr-btn { flex: 0 1 auto; min-width: 0; padding: 8px 12px; font-size: .8rem; white-space: nowrap; }
+}
+
+/* Pengaturan › Profil di laptop dan tablet: foto di tengah-tengah dua tombol, agak ke kiri */
+@media (min-width: 601px) {
+  .pr-avatar {
+    display: grid; grid-template-columns: auto auto; align-items: center;
+    column-gap: 16px; row-gap: 8px; justify-content: end;
+    margin-right: 28px;                    /* geser ke kiri; perbesar angkanya untuk lebih ke kiri lagi */
+  }
+  .pr-avatar .pf-prev { grid-column: 1; grid-row: 1 / span 2; align-self: center; }   /* membentang dua baris, jadi tepat di tengah tombol */
+  .pr-avatar .pr-btn:first-of-type { grid-column: 2; grid-row: 1; }                   /* Pilih foto */
+  .pr-avatar .pr-btn:last-of-type  { grid-column: 2; grid-row: 2; }                   /* Hapus foto */
+}
+
+/* panel: tetap bisa digulir (geser jari atau roda mouse), tapi scrollbar tidak terlihat */
+#panel, #panel * {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* Edge lama */
+}
+#panel::-webkit-scrollbar,
+#panel *::-webkit-scrollbar { display: none; width: 0; height: 0; }   /* Chrome, Safari, Android */
+
+/* ===== Workspaces: daftar 1-2-3 di kiri diam, hanya isi di kanan yang bergulir ===== */
+.views:has(.view[data-view="workspaces"].active) { display: flex; flex-direction: column; overflow: hidden; }
+.view[data-view="workspaces"].active { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+.view[data-view="workspaces"] .ws { flex: 1; min-height: 0; grid-template-rows: minmax(0, 1fr); }
+.view[data-view="workspaces"] .ws-list { align-self: start; }
+.view[data-view="workspaces"] .ws-content { min-height: 0; overflow-y: auto; }
+
+/* HP sempit: daftar jadi baris di atas, isi di bawahnya yang bergulir */
+@media (max-width: 520px) {
+  .view[data-view="workspaces"] .ws { grid-template-rows: auto minmax(0, 1fr); }
+}

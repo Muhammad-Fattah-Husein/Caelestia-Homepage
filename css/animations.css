@@ -1,0 +1,250 @@
+:root {
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-ease-in: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  transition:
+    background-color 0.6s ease,
+    color 0.6s ease;
+}
+
+#panel {
+  transform-origin: top center;
+  scale: 0.98 0.96;
+  transition:
+    transform 0.38s var(--motion-ease),
+    opacity 0.24s ease,
+    scale 0.38s var(--motion-ease),
+    background-color 0.6s ease;
+}
+#panel.open {
+  scale: 1;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.view.active {
+  animation: fade-in 0.32s var(--motion-ease);
+}
+
+#theme-picker {
+  transition:
+    transform 0.34s var(--motion-ease),
+    opacity 0.24s ease,
+    scale 0.34s var(--motion-ease),
+    background-color 0.6s ease;
+}
+
+#launcher {
+  transition:
+    transform 0.36s var(--motion-ease),
+    opacity 0.24s ease,
+    width 0.42s var(--motion-ease);
+}
+@keyframes lc-pop {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.9);
+  }
+}
+#launcher.themes .lc-theme {
+  animation: lc-pop 0.45s var(--motion-ease) backwards;
+  animation-delay: calc(
+    var(--i, 0) * 40ms + 120ms
+  ); /* muncul bergantian dari kiri */
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+@keyframes toast-bar {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+.toast {
+  animation: toast-in 0.38s var(--motion-ease);
+}
+.toast.out {
+  animation: toast-out 0.28s var(--motion-ease-in) forwards;
+}
+.t-bar {
+  animation: toast-bar var(--dur) linear forwards;
+}
+.toast:hover .t-bar {
+  animation-play-state: paused;
+}
+
+#terminal {
+  transition:
+    transform 0.36s var(--motion-ease),
+    opacity 0.24s ease;
+}
+
+#filter-panel {
+  transition:
+    transform 0.36s var(--motion-ease),
+    opacity 0.24s ease,
+    scale 0.36s var(--motion-ease),
+    background-color 0.6s ease;
+}
+
+#power-menu {
+  scale: 0.96;
+  transition:
+    transform 0.32s var(--motion-ease),
+    opacity 0.24s ease,
+    scale 0.32s var(--motion-ease),
+    background-color 0.6s ease;
+}
+#power-menu.open { scale: 1; }
+
+@keyframes logo-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary) 40%, transparent);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 16px 2px color-mix(in srgb, var(--primary) 40%, transparent);
+  }
+}
+.pm-logo {
+  animation: logo-pulse 3s ease-in-out infinite;
+}
+#power-menu:not(.open) .pm-logo {
+  animation-play-state: paused;
+} /* tak berjalan saat menu tersembunyi */
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ghost-in {
+  from {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes dup-pulse {
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+.disc-ghost {
+  animation: ghost-in 0.28s var(--motion-ease);
+}
+#cover.dup {
+  animation: dup-pulse 0.42s var(--motion-ease);
+}
+#tint { transition: background-color .4s; }
+
+#theme-picker  { transform-origin: left center;   scale: .96; }
+#filter-panel  { transform-origin: right center;  scale: .96; }
+#theme-picker.open, #filter-panel.open {
+  scale: 1;
+}
+
+/* ===== launcher: muncul dari bawah sebagai lingkaran, lalu melebar ke kiri dan kanan ===== */
+#launcher {
+  --lc-dot: 56px;                          /* diameter lingkaran awal */
+  --lc-r: calc(var(--lc-dot) / 2);
+  /* tertutup: hanya lingkaran di dasar kotak, di tengah */
+  clip-path: inset(calc(100% - var(--lc-dot)) calc(50% - var(--lc-r)) 0 calc(50% - var(--lc-r)) round var(--lc-r));
+  transform: translate(-50%, 56px);        /* mulai sedikit di bawah posisinya */
+  transition:                              /* menutup: mengecil jadi lingkaran, lalu tenggelam */
+    clip-path .34s var(--motion-ease-in),
+    transform .36s var(--motion-ease-in) .08s,
+    opacity .2s ease .2s,
+    width .42s var(--motion-ease);   /* strip tema tetap melebar halus */
+}
+#launcher.open {
+  clip-path: inset(0px 0px 0px 0px round var(--radius));   /* bentuk normal */
+  transition:                              /* membuka: naik dulu, lalu melebar */
+    clip-path .46s var(--motion-ease) .08s,
+    transform .38s var(--motion-ease),
+    opacity .2s ease,
+    width .42s var(--motion-ease);
+}
+
+/* tirai warna kotak: menutupi isi (teks, daftar) selama masih berbentuk lingkaran */
+#launcher::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: var(--surface); border-radius: var(--radius);
+  opacity: 1; transition: opacity .18s ease;
+}
+#launcher.open::after { opacity: 0; transition: opacity .28s ease .24s; }
+
+.modal-box,
+.prefs-win {
+  transform: translateY(8px) scale(0.98);
+  transition: transform 0.3s var(--motion-ease);
+}
+.modal.open .modal-box,
+.prefs.open .prefs-win {
+  transform: none;
+}
+
+/* hormati pengaturan "Efek gerak" dan mode hemat */
+html.no-motion #launcher, html.no-motion #launcher::after { transition: none; }
+
+html.no-motion #power-menu,
+html.no-motion #power-menu.open { transition: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  body { transition: none; }
+  #panel, #panel.open,
+  #theme-picker, #theme-picker.open,
+  #filter-panel, #filter-panel.open,
+  #terminal, #terminal.open,
+  #power-menu,
+  #power-menu.open,
+  #launcher, #launcher.open, #launcher::after, #launcher.open::after,
+  .lc-pane, .lc-theme,
+  .modal-box, .prefs-win {
+    transition: none;
+  }
+  #panel, #panel.open, #theme-picker, #theme-picker.open,
+  #filter-panel, #filter-panel.open, #power-menu, #power-menu.open {
+    scale: 1;
+  }
+  .modal-box, .prefs-win { transform: none; }
+  .view.active, #launcher.themes .lc-theme, .wx-pt,
+  .toast, .toast.out, .disc-ghost, #cover.dup, .pm-logo,
+  .wd-disc .disc, .mini .disc {
+    animation: none;
+  }
+}

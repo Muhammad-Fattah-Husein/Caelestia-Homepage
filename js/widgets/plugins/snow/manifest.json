@@ -1,0 +1,12 @@
+{
+  "type": "snow",
+  "name": "Snow",
+  "version": "1.0.0",
+  "description": "Falling snow effect",
+  "icon": "18_snowflake.png",
+  "entry": "index.js",
+  "styles": [
+    "style.css"
+  ],
+  "unique": true
+}

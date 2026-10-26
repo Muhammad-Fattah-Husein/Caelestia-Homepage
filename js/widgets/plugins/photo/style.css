@@ -1,0 +1,21 @@
+@media (prefers-reduced-motion: reduce) {.pf-bar { transition: none; }}
+
+/* bingkai foto */
+.pf {position: relative; width: 220px; height: 165px; overflow: hidden; border-radius: 6px;
+  border: 8px solid #f4f1ea; background: color-mix(in srgb, var(--surface) 70%, transparent);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .45);}
+
+.pf-img {display: block; width: 100%; height: 100%; object-fit: cover;}
+
+.pf-img[hidden], .pf-empty[hidden] {display: none;}
+
+.pf-empty {position: absolute; inset: 0; display: grid; place-items: center; padding: 10px; text-align: center; font-size: .8rem; color: var(--on-surface); opacity: .75;}
+
+.pf-bar {position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; gap: 6px; padding: 6px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, .55)); transition: opacity .2s;}
+
+.pf-bar button {border: 0; border-radius: 8px; padding: 4px 9px; font-size: .85rem; cursor: pointer; color: inherit;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);}
+
+@media (hover: hover) {.pf.has .pf-bar {opacity: 0;}
+.pf.has:hover .pf-bar {opacity: 1;}}

@@ -1,0 +1,16 @@
+{
+  "type": "sticky",
+  "name": "Sticky note",
+  "version": "1.0.0",
+  "description": "A small note in 4 colors",
+  "icon": "37_note_edit.png",
+  "entry": "index.js",
+  "styles": [
+    "style.css"
+  ],
+  "resize": "box",
+  "min": [
+    150,
+    130
+  ]
+}

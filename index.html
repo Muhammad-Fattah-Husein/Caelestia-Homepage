@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Homepage</title>
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/animations.css" />
+    <link rel="stylesheet" href="css/library.css" />
+    <link rel="stylesheet" href="css/widgets-extra.css" />
+    <link rel="stylesheet" href="css/calendar.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/huefilter.css" />
+      <link rel="stylesheet" href="css/touch-keys.css" />
+      <link rel="stylesheet" href="css/phone.css">
+      <script src="js/system/barposition.js"></script>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <symbol id="i-power" viewBox="0 0 24 24">
+        <g
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 2v10" />
+          <path d="M18.4 6.6a9 9 0 1 1-12.77.04" />
+        </g>
+      </symbol>
+      <symbol id="i-dashboard" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="8" height="8" rx="1.5" />
+        <rect x="13" y="3" width="8" height="5" rx="1.5" />
+        <rect x="13" y="10" width="8" height="11" rx="1.5" />
+        <rect x="3" y="13" width="8" height="8" rx="1.5" />
+      </symbol>
+      <symbol id="i-media" viewBox="0 0 24 24">
+        <path d="M9 18V5l11-2v13" />
+        <circle cx="6" cy="18" r="3" />
+        <circle cx="17" cy="16" r="3" />
+      </symbol>
+      <symbol id="i-gauge" viewBox="0 0 24 24">
+        <path d="M5.6 18.4a9 9 0 1 1 12.8 0" />
+        <path d="M12 13l4-4" />
+      </symbol>
+      <symbol id="i-workspaces" viewBox="0 0 24 24">
+        <circle cx="12" cy="6" r="2.5" />
+        <circle cx="6" cy="17" r="2.5" />
+        <circle cx="18" cy="17" r="2.5" />
+      </symbol>
+      <symbol id="i-spark" viewBox="0 0 24 24">
+        <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" />
+      </symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M3 12h18" />
+        <path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18" />
+      </symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+      </symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24">
+        <rect x="3" y="5" width="18" height="16" rx="2" />
+        <path d="M3 10h18M8 3v4M16 3v4" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" />
+      </symbol>
+    </svg>
+    <div id="wallpaper"></div>
+    <canvas id="wave" aria-hidden="true"></canvas>
+    <canvas id="fx" aria-hidden="true"></canvas>
+    <div id="frame" aria-hidden="true"></div>
+    <div id="wd-layer"></div>
+
+    <aside id="bar">
+      <div class="bar-top">
+        <button id="bar-logo" title="Open panel">✦</button>
+        <div id="bar-ws" class="pill"></div>
+      </div>
+
+      <div class="bar-mid">
+        <button id="bar-title" title="Change theme"></button>
+      </div>
+
+      <div class="bar-bottom">
+  <div class="pill touch-only">
+    <button id="btn-launcher" class="bar-btn" title="Launcher (/ or Ctrl+K)" aria-label="Open launcher"><img class="asset-icon" src="assets/transparent_ui_icons/39_search.png" alt="" aria-hidden="true" /></button>
+    <button id="btn-terminal" class="bar-btn" title="Terminal (`)" aria-label="Open terminal">&gt;_</button>
+    <button id="btn-filter" class="bar-btn" title="Brightness and temperature (f)" aria-label="Screen brightness and temperature" aria-expanded="false" aria-controls="filter-panel">
+      <svg class="ic" aria-hidden="true"><use href="#i-sun" /></svg>
+    </button>
+  </div>
+  <div class="pill"><span id="net"></span></div>
+  <div id="bar-clock">
+    <span id="clock-hh">--</span><span id="clock-mm">--</span>
+  </div>
+        <button id="btn-settings" class="bar-btn" title="Settings (Ctrl+,)" aria-label="Open settings">
+  <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="3" />
+    <circle cx="12" cy="12" r="7" />
+    <line x1="12" y1="2" x2="12" y2="5" />
+    <line x1="12" y1="2" x2="12" y2="5" transform="rotate(45 12 12)" />
+    <line x1="12" y1="2" x2="12" y2="5" transform="rotate(90 12 12)" />
+    <line x1="12" y1="2" x2="12" y2="5" transform="rotate(135 12 12)" />
+    <line x1="12" y1="2" x2="12" y2="5" transform="rotate(180 12 12)" />
+    <line x1="12" y1="2" x2="12" y2="5" transform="rotate(225 12 12)" />
+    <line x1="12" y1="2" x2="12" y2="5" transform="rotate(270 12 12)" />
+    <line x1="12" y1="2" x2="12" y2="5" transform="rotate(315 12 12)" />
+  </svg>
+</button>
+    <button id="btn-power" class="bar-btn" title="Power" aria-label="Power menu" aria-expanded="false">
+    <svg class="ic" aria-hidden="true"><use href="#i-power" /></svg>
+  </button>
+</div>
+    </aside>
+
+    <section id="theme-picker" aria-label="Choose a theme">
+      <div class="tp-head">Themes</div>
+      <div id="tp-grid"></div>
+    </section>
+
+    <div id="launcher" inert>
+      <div class="lc-box">
+        <div class="lc-pane lc-pane-list">
+          <div class="lc-pane-in">
+            <ul id="lc-list" role="listbox"></ul>
+          </div>
+        </div>
+        <div class="lc-pane lc-pane-themes">
+          <div class="lc-pane-in">
+            <div
+              id="lc-themes"
+              class="lc-themes"
+              role="listbox"
+              aria-label="Choose a wallpaper"
+            ></div>
+          </div>
+        </div>
+        <input
+          id="lc-input"
+          type="text"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder='Search the web, or type ">" for commands…'
+        />
+      </div>
+    </div>
+
+    <div id="terminal" inert>
+      <div class="term-box">
+        <div id="term-out" role="log"></div>
+        <div class="term-line">
+          <span class="term-prompt">~ ❯</span>
+          <input
+            id="term-input"
+            type="text"
+            autocomplete="off"
+            spellcheck="false"
+            autocapitalize="off"
+            aria-label="Terminal command"
+          />
+        </div>
+      </div>
+    </div>
+
+    <aside id="power-menu" aria-label="Power menu" inert>
+      <button
+        class="pm-btn"
+        data-act="off"
+        title="Power off"
+        aria-label="Turn off page"
+      >
+        <svg class="ic" aria-hidden="true"><use href="#i-power" /></svg>
+      </button>
+      <div class="pm-logo" aria-hidden="true">✦</div>
+      <button
+        class="pm-btn"
+        data-act="reset"
+        title="Reset to defaults"
+        aria-label="Reset to defaults"
+      >
+        ⟳
+      </button>
+    </aside>
+
+    <div id="edge"></div>
+    <div id="edge-r"></div>
+    <aside id="filter-panel" aria-label="Screen filters" inert>
+      <div class="fp-col">
+        <span class="fp-cap">Warmer</span>
+        <div id="sl-temp"></div>
+        <span class="fp-cap">Cooler</span>
+        <span class="fp-name">Temperature</span>
+        <output id="val-temp" class="fp-val"></output>
+        <button
+          id="btn-auto-temp"
+          class="fp-auto"
+          type="button"
+          aria-pressed="false"
+        >
+          Auto
+        </button>
+      </div>
+      <div class="fp-col">
+        <span class="fp-cap">Brighter</span>
+        <div id="sl-bright"></div>
+        <span class="fp-cap">Darker</span>
+        <span class="fp-name">Brightness</span>
+        <output id="val-bright" class="fp-val"></output>
+      </div>
+    </aside>
+
+    <section id="panel">
+      <nav class="tabs">
+        <button class="tab active" data-tab="dashboard">
+          <svg class="ic" aria-hidden="true"><use href="#i-dashboard" /></svg>
+          <span>Dashboard</span>
+        </button>
+        <button class="tab" data-tab="media">
+          <svg class="ic" aria-hidden="true"><use href="#i-media" /></svg>
+          <span>Media</span>
+        </button>
+        <button class="tab" data-tab="performance">
+          <svg class="ic" aria-hidden="true"><use href="#i-gauge" /></svg>
+          <span>Performance</span>
+        </button>
+        <button class="tab" data-tab="workspaces">
+          <svg class="ic" aria-hidden="true"><use href="#i-workspaces" /></svg>
+          <span>Workspaces</span>
+        </button>
+      </nav>
+      <div class="views">
+        <div class="view active" data-view="dashboard">
+          <div class="dash">
+            <section class="dash-cal" aria-label="Calendar">
+              <div class="cal-mhead">
+                <button id="cal-mprev" class="nav" type="button" aria-label="Previous month">‹</button>
+                <button id="cal-title" type="button" title="Back to this month"></button>
+                <button id="cal-mnext" class="nav" type="button" aria-label="Next month">›</button>
+                <button id="cal-madd" class="add" type="button" aria-label="Add event" title="Add event">＋</button>
+              </div>
+              <div id="cal-grid"></div>
+            </section>
+
+            <section class="dash-ag" aria-label="Upcoming events">
+              <div class="dag-head">
+                <span id="dag-title"></span>
+                <button id="dag-open" class="dag-open" type="button">Open</button>
+              </div>
+              <div id="dag-list" class="dag-list"></div>
+            </section>
+
+            <section class="dash-mid" aria-label="Clock and hourly weather">
+              <div id="wx-orbit" class="wx-orbit">
+                <svg class="wx-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                  <ellipse cx="50" cy="50" rx="44" ry="36" />
+                </svg>
+                <div id="wx-points"></div>
+                <div class="wx-clock">
+                  <div class="wx-time"><span id="dash-hm">--:--</span><span id="dash-s">:--</span></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="dash-wx" aria-label="Weather">
+              <div class="wx-day">
+                <button id="wx-prev" type="button" aria-label="Previous day">‹</button>
+                <span id="wx-dayname"></span>
+                <button id="wx-next" type="button" aria-label="Next day">›</button>
+              </div>
+              <div id="wx-temp" class="wx-temp">--°</div>
+              <div id="wx-desc" class="wx-desc">Loading…</div>
+              <div id="wx-rings" class="wx-rings"></div>
+            </section>
+          </div>
+
+          <!-- disembunyikan: profile.js dan mini.js mengisi elemen ini, jadi harus tetap ada -->
+          <div class="dash-hidden" hidden>
+            <div class="card profile">
+                <div id="pf-avatar" class="pf-avatar"></div>
+                <div class="pf-info">
+                  <div id="pf-name" class="pf-name"></div>
+                  <div class="pf-row">
+                    <svg class="ic" aria-hidden="true">
+                      <use href="#i-spark" />
+                    </svg>
+                    <span id="pf-line"></span>
+                  </div>
+                  <div class="pf-row">
+                    <svg class="ic" aria-hidden="true">
+                      <use href="#i-globe" />
+                    </svg>
+                    <span id="pf-env"></span>
+                  </div>
+                  <div class="pf-row">
+                    <svg class="ic" aria-hidden="true">
+                      <use href="#i-clock" />
+                    </svg>
+                    <span id="pf-up"></span>
+                  </div>
+                </div>
+              </div>
+            <div class="card mini">
+                <div
+                  id="mini-cover"
+                  class="disc"
+                  role="button"
+                  tabindex="0"
+                  aria-label="Play or pause"
+                ></div>
+                <div class="mini-info">
+                  <div id="mini-title" class="mini-title"></div>
+                  <div id="mini-artist" class="mini-artist"></div>
+                </div>
+              </div>
+          </div>
+        </div>
+        <div class="view" data-view="media">
+          <div class="player">
+            <div class="viz">
+              <canvas id="viz" width="320" height="320"></canvas>
+              <div id="cover"></div>
+            </div>
+            <div class="info">
+              <div id="track-title">No track selected</div>
+              <div id="track-artist"></div>
+              <div class="controls">
+                <button id="btn-prev" type="button" aria-label="Previous track"><img class="asset-icon" src="assets/transparent_ui_icons/03_skip_previous.png" alt="" aria-hidden="true" /></button>
+                <button id="btn-play" type="button" aria-label="Play"><img class="asset-icon" src="assets/transparent_ui_icons/07_play.png" alt="" aria-hidden="true" /></button>
+                <button id="btn-next" type="button" aria-label="Next track"><img class="asset-icon" src="assets/transparent_ui_icons/02_skip_next.png" alt="" aria-hidden="true" /></button>
+              </div>
+              <input id="seek" type="range" min="0" max="100" value="0" />
+              <div class="times">
+                <span id="t-cur">0:00</span><span id="t-dur">0:00</span>
+              </div>
+              <div class="extras">
+  <button id="btn-shuffle" class="x-btn" type="button" aria-label="Shuffle" title="Shuffle"></button>
+  <button id="btn-repeat" class="x-btn" type="button"></button>
+  <input id="vol" class="x-vol" type="range" min="0" max="100" value="100" aria-label="Volume" />
+</div>
+            </div>
+          </div>
+          <audio id="audio" preload="metadata"></audio>
+        </div>
+        <div class="view" data-view="calendar">
+  <div class="cal-wrap">
+    <div class="cal-main">
+      <div class="cal-bar">
+        <button id="cal-prev" class="cal-nav" type="button" aria-label="Previous month">‹</button>
+        <button id="cal-month" class="cal-month" type="button" title="Return to today"></button>
+        <button id="cal-next" class="cal-nav" type="button" aria-label="Next month">›</button>
+      </div>
+      <div id="cal-big" class="cal-big"></div>
+    </div>
+    <aside class="ag">
+      <div class="ag-top">
+        <div>
+          <div id="ag-date" class="ag-date"></div>
+          <div id="ag-sub" class="ag-sub"></div>
+        </div>
+        <div class="ag-tools">
+          <button id="ag-bell" class="ag-btn" type="button" aria-label="System notifications"><img class="asset-icon" src="assets/transparent_ui_icons/40_bell.png" alt="" aria-hidden="true" /></button>
+          <button id="ag-add" class="ag-btn" type="button" aria-label="Add event">＋</button>
+        </div>
+      </div>
+      <ul id="ag-list" class="ag-list"></ul>
+    </aside>
+  </div>
+</div>
+        <div class="view" data-view="performance">
+          <div id="gauges" class="gauges"></div>
+        </div>
+        <div class="view" data-view="workspaces">
+          <div class="ws">
+            <div id="ws-list" class="ws-list"></div>
+            <div class="ws-content">
+              <div class="ws-pane" data-pane="shortcuts">
+                <div id="sc-grid" class="sc-grid"></div>
+              </div>
+              <div class="ws-pane" data-pane="notes">
+                <textarea
+                  id="note-area"
+                  class="note-area"
+                  maxlength="50000"
+                  spellcheck="false"
+                  placeholder="Write a note… saved automatically"
+                ></textarea>
+                <div id="note-status" class="note-status"></div>
+              </div>
+              <div class="ws-pane" data-pane="widgets">
+                <div
+                  id="mode-row"
+                  class="mode-row"
+                  role="group"
+                  aria-label="Modes"
+                ></div>
+                <p class="wd-hint">
+                  Drag a widget onto the desktop.
+                </p>
+                <div id="wd-catalog" class="wd-catalog"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="toasts" aria-live="polite"></div>
+    <div id="power-screen">
+      <button id="btn-on" title="Turn on" aria-label="Turn on">
+        <svg class="ic" aria-hidden="true"><use href="#i-power" /></svg>
+      </button>
+    </div>
+    <div id="sc-modal" class="modal" inert>
+      <form id="sc-form" class="modal-box" autocomplete="off" novalidate>
+        <h2 id="sc-title">Add shortcut</h2>
+        <label
+          >Name
+          <input id="sc-name" type="text" maxlength="30" spellcheck="false" />
+        </label>
+        <label
+          >URL
+          <input
+            id="sc-url"
+            type="text"
+            inputmode="url"
+            spellcheck="false"
+            autocapitalize="off"
+            placeholder="github.com"
+          />
+        </label>
+        <div id="sc-error" class="modal-error" role="alert"></div>
+        <div class="modal-actions">
+          <button type="button" id="sc-cancel">Cancel</button>
+          <button type="submit">Done</button>
+        </div>
+      </form>
+    </div>
+    <div id="tint" aria-hidden="true"></div>
+    <div id="dim" aria-hidden="true"></div>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>

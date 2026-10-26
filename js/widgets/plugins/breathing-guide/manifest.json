@@ -1,0 +1,12 @@
+{
+  "type": "breath",
+  "name": "Breathing guide",
+  "version": "1.0.0",
+  "description": "4-7-8, box, or calm breathing",
+  "icon": "26_wind.png",
+  "entry": "index.js",
+  "styles": [
+    "style.css"
+  ],
+  "resize": "scale"
+}

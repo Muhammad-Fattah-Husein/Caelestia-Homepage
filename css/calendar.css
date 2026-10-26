@@ -1,0 +1,102 @@
+/* ===== kalender kecil di Dashboard ===== */
+.cal-day { position: relative; cursor: pointer; }
+.cal-day.sun:not(.today) { color: color-mix(in srgb, #e5646e 75%, var(--on-surface)); }
+.cal-day.hol:not(.today) { color: #e5646e; font-weight: 600; }
+.cal-day.cuti:not(.today) { color: #f2b84b; }
+.cal-day.today { color: var(--bg); font-weight: 700; }
+.cal-day.has::after {
+  content: ""; position: absolute; left: 50%; bottom: 10%; width: 4px; height: 4px; margin-left: -2px;
+  border-radius: 50%; background: var(--primary);
+}
+.cal-day.today.has::after { background: var(--bg); }
+
+/* ===== Layout Utama Kalender Besar ===== */
+.cal-wrap {
+  display: grid; grid-template-columns: minmax(250px, 1.2fr) 1fr; gap: 16px;
+  height: min(310px, calc(50dvh - 96px));
+}
+@media (max-width: 560px) {
+  .cal-wrap { grid-template-columns: 1fr; height: auto; max-height: calc(50dvh - 96px); overflow: auto; }
+}
+
+.cal-main { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+
+/* ===== Navigasi Kalender ===== */
+.cal-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.cal-nav {
+  width: 30px; height: 30px; padding: 0; border: none; border-radius: 50%;
+  background: color-mix(in srgb, var(--primary) 15%, transparent); color: inherit; 
+  font-size: 1.1rem; cursor: pointer; flex: none;
+}
+.cal-nav:hover:not(:disabled) { background: color-mix(in srgb, var(--primary) 28%, transparent); }
+.cal-nav:disabled { opacity: .3; cursor: default; }
+.cal-month { 
+  flex: 1; padding: 6px; border: none; border-radius: 10px; background: none; 
+  color: inherit; font: inherit; font-weight: 600; cursor: pointer; text-transform: capitalize;
+}
+.cal-month:hover { background: color-mix(in srgb, var(--primary) 12%, transparent); }
+
+/* ===== Grid Tanggal Besar ===== */
+.cal-big { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center; font-size: .85rem; }
+.cb-day {
+  position: relative; min-height: 32px; aspect-ratio: 1.15; display: grid; place-items: center; padding: 0;
+  border: 1px solid transparent; border-radius: 10px; background: none;
+  color: inherit; font: inherit; cursor: pointer;
+}
+.cb-day:hover { background: color-mix(in srgb, var(--primary) 15%, transparent); }
+.cb-day.sun:not(.sel):not(.today) { color: color-mix(in srgb, #e5646e 75%, var(--on-surface)); }
+.cb-day.hol:not(.sel):not(.today) { color: #e5646e; font-weight: 600; }
+.cb-day.cuti:not(.sel):not(.today) { color: #f2b84b; }
+.cb-day.today { background: var(--primary); font-weight: 700; color: var(--bg); }
+.cb-day.sel { border-color: var(--primary); }
+.cb-dots { position: absolute; bottom: 4px; left: 0; right: 0; display: flex; justify-content: center; gap: 2px; }
+.cb-dots i { width: 4px; height: 4px; border-radius: 50%; background: var(--primary); }
+.cb-day.today .cb-dots i, .cb-day.sel .cb-dots i { background: var(--bg); }
+
+/* ===== Panel Agenda ===== */
+.ag { min-width: 0; display: flex; flex-direction: column; min-height: 0; }
+.ag-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+.ag-date { font-weight: 600; font-size: .95rem; }
+.ag-sub { font-size: .75rem; opacity: .65; }
+.ag-tools { display: flex; gap: 6px; flex: none; }
+.ag-btn {
+  width: 30px; height: 30px; padding: 0; border: none; border-radius: 50%; line-height: 1; cursor: pointer;
+  background: color-mix(in srgb, var(--primary) 18%, transparent); color: inherit;
+}
+.ag-btn:hover { background: color-mix(in srgb, var(--primary) 30%, transparent); }
+.ag-btn.on { background: var(--primary); color: var(--bg); }
+.ag-btn[hidden] { display: none; }
+
+.ag-list { 
+  flex: 1; min-height: 0; margin: 0; padding: 0; list-style: none; 
+  display: flex; flex-direction: column; gap: 6px; overflow: auto; 
+}
+.ag-item {
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; font-size: .85rem;
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+.ag-item.hol { background: color-mix(in srgb, #e5646e 18%, transparent); }
+.ag-item.cuti { background: color-mix(in srgb, #f2b84b 18%, transparent); }
+.ag-time { flex: none; min-width: 4.2em; font-size: .75rem; opacity: .75; font-variant-numeric: tabular-nums; }
+.ag-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ag-meta { display: inline-flex; flex: none; align-items: center; gap: 3px; font-size: .75rem; opacity: .7; }
+.ag-meta .asset-icon { width: .9rem; height: .9rem; object-fit: contain; }
+.ag-btn .asset-icon { width: 1rem; height: 1rem; object-fit: contain; vertical-align: middle; }
+.ag-edit, .ag-del {
+  flex: none; padding: 2px 6px; border: none; border-radius: 6px;
+  background: none; color: inherit; font: inherit; font-size: .8rem; opacity: .55; cursor: pointer;
+}
+.ag-edit:hover, .ag-del:hover { opacity: 1; }
+.ag-del.armed { background: #e5646e; color: #fff; opacity: 1; }
+.ag-empty { padding: 12px 0; font-size: .8rem; opacity: .6; }
+
+/* ===== kartu "Berikutnya" di Dashboard ===== */
+.nx { display: flex; flex-direction: column; gap: 6px; cursor: pointer; }
+.nx-h { font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; opacity: .6; }
+.nx-row { display: flex; align-items: baseline; gap: 10px; font-size: .85rem; min-width: 0; }
+.nx-when { flex: none; min-width: 5.5em; font-size: .75rem; opacity: .7; font-variant-numeric: tabular-nums; }
+.nx-t { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nx-hol .nx-when { color: #e5646e; opacity: 1; }
+.nx-empty .nx-t { opacity: .6; }
+
+.nx-gone { display: none !important; }

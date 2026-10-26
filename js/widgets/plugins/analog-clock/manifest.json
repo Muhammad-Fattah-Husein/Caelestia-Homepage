@@ -1,0 +1,11 @@
+{
+  "type": "clock",
+  "name": "Analog clock",
+  "version": "1.0.0",
+  "description": "A clock with hands",
+  "icon": "43_clock.png",
+  "entry": "index.js",
+  "styles": [
+    "style.css"
+  ]
+}
